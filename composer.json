@@ -7,6 +7,6 @@
         "phpfastcache/phpfastcache": "^8.0"
     },
     "scripts": {
-      "post-install-cmd": "git rev-parse HEAD > git-sha"
+      "post-install-cmd": "./store_git_sha.sh"
     }
 }
