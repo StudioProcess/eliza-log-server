@@ -129,7 +129,7 @@ if ($route == 'session') {
     $payload['exp'] = intval($time) + $EXPIRATION_SECS;
   }
   json(array(
-    'token' => JWT::encode($payload, $jwt_secret),
+    'session' => JWT::encode($payload, $jwt_secret),
   ));
   exit();
 }
