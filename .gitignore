@@ -1,5 +1,7 @@
 .DS_Store
 vendor
-api/jwt.secret
 logs*
-git-sha
+api/jwt.secret
+api/git-sha
+api/vendor
+api/composer.json

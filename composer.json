@@ -6,7 +6,10 @@
         "firebase/php-jwt": "^5.4",
         "phpfastcache/phpfastcache": "^8.0"
     },
+    "config": {
+        "vendor-dir": "api/vendor"
+    },
     "scripts": {
-      "post-install-cmd": "./store_git_sha.sh"
+      "post-install-cmd": "./post_install.sh"
     }
 }

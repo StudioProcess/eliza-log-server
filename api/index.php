@@ -1,8 +1,9 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 include 'config.php';
 include 'util.php';
 use Firebase\JWT\JWT;
+
 
 if ($DEBUG) {
   error_reporting(E_ALL);
@@ -14,7 +15,7 @@ $route = util\remove_prefix( $_SERVER['REQUEST_URI'], $dir); # remove dir
 $route = preg_replace('/\?.*/', '', $route); # remove query string
 $route = strtolower(trim($route, '/'));
 $query = $_REQUEST;
-$jwt_secret = trim(file_get_contents('jwt.secret'));
+$jwt_secret = trim(file_get_contents($FILES['jwt-secret']));
 
 
 function get_logfile($ts) {
@@ -104,9 +105,13 @@ function debug_status() {
 }
 
 function info() {
-  $string = file_get_contents("../composer.json");
+  global $FILES;
+  $string = file_get_contents($FILES['composer-json']);
   $json = json_decode($string, true);
-  $git_sha = file_get_contents("../git-sha");
+  if (is_null($json)) {
+    $json = array('name' => '', 'description' => '', 'version' => '');
+  }
+  $git_sha = file_get_contents($FILES['git-sha']);
   if (!$git_sha) $git_sha = '';
   $git_sha = trim($git_sha);
   json(array(

@@ -1,21 +1,34 @@
 # Über's Reden reden - Logging API
 
-## Install dependencies
-```
-brew install composer`
-composer install
-```
 
-## Deploy
-Deploy the following files/folders:
-```
-api/
-vendor/
-composer.json
-git-sha
-```
+## Server requirements
+
+* Apache (.htaccess)
+* PHP 7
+
+
+## Hot to deploy
+
+1. Install composer (if needed):
+
+    ```
+    brew install composer
+    ```
+    
+2. Install dependencies:
+
+    ```
+    composer install
+    ```
+    
+    This will also run the post install script 
+    `post_install.sh`
+    
+3. Deploy the contents of `api/` to your web server.
+
 
 ## Usage (API Docs)
+
 * [GET /](#get-)
 * [GET /session](#get-session)
 * [GET /log](#get-log)
