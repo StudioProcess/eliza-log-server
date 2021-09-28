@@ -1,0 +1,12 @@
+{
+    "name": "studioprocess/redenreden-log-api",
+    "description": "",
+    "version": "0.1.0",
+    "require": {
+        "firebase/php-jwt": "^5.4",
+        "phpfastcache/phpfastcache": "^8.0"
+    },
+    "scripts": {
+      "post-install-cmd": "git rev-parse HEAD > git-sha"
+    }
+}

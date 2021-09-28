@@ -1,0 +1,8 @@
+# Forward everything that doesn't explicitly exist to index.php
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php [L]
+</IfModule>
