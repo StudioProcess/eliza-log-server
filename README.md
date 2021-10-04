@@ -1,4 +1,4 @@
-# Über's Reden reden - Logging API
+# Eliza - Logging Server
 
 
 ## Server requirements
