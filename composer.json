@@ -3,8 +3,7 @@
     "description": "",
     "version": "0.1.0",
     "require": {
-        "firebase/php-jwt": "^5.4",
-        "phpfastcache/phpfastcache": "^8.0"
+        "firebase/php-jwt": "^5.4"
     },
     "config": {
         "vendor-dir": "api/vendor"
