@@ -7,7 +7,7 @@
 * PHP 7
 
 
-## Hot to deploy
+## How to deploy
 
 1. Install composer (if needed):
 
