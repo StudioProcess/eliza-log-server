@@ -16,7 +16,7 @@ $route = preg_replace('/\?.*/', '', $route); # remove query string
 $route = strtolower(trim($route, '/'));
 $query = $_REQUEST;
 $jwt_secret = trim(file_get_contents($FILES['jwt-secret']));
-
+$headers = apache_request_headers();
 
 function get_logfile($ts) {
   global $LOGDIR;
@@ -42,7 +42,7 @@ function log_message($ts, $message) {
 # get auth token from request
 function get_auth_token() {
   # check Authorization Header
-  $headers = apache_request_headers();
+  global $headers;
   if (array_key_exists('Authorization', $headers)) {
     $auth = trim($headers['Authorization']);
     $matches = array();
@@ -66,10 +66,16 @@ function get_auth_token() {
 }
 
 function check_host() {
-  global $CORS_ALLOW_ORIGIN, $ALLOW_HOSTS;
+  global $CORS_ALLOW_ORIGINS, $ALLOW_HOSTS, $headers;
   # send cors header
-  header("Access-Control-Allow-Origin: " . $CORS_ALLOW_ORIGIN);
-  # check http host
+  $origin = $headers['Origin'] ?? '';
+  if ( in_array($origin, $CORS_ALLOW_ORIGINS) ) {
+    header("Access-Control-Allow-Origin: " . $origin);
+  } else if ( in_array('*', $CORS_ALLOW_ORIGINS) ) {
+    header("Access-Control-Allow-Origin: *");
+  }
+  
+  # check http(s) host
   if ( in_array('*', $ALLOW_HOSTS) ) return;
   if ( !in_array(strtolower($_SERVER["HTTP_HOST"]), $ALLOW_HOSTS) ) {
     // error(403, array('error' => 'forbidden'));

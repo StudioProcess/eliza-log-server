@@ -8,7 +8,7 @@ $FILES = array(
   'composer-json' => './composer.json'
 );
 $EXPIRATION_SECS = 3600 * 24; # session expiration in seconds (use <=0 for no expiration)
-$CORS_ALLOW_ORIGIN = '*';
+$CORS_ALLOW_ORIGINS = array('https://kg.laurentlang.com', 'https://sketch.process.studio', '*');
 $ALLOW_HOSTS = array('*');
 
 ?>
