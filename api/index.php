@@ -33,10 +33,15 @@ function get_logfile($ts) {
 }
 
 function log_message($ts, $message) {
+  global $LOG_MESSAGE_MAX_LENGTH;
   $message = trim(strval($message));
   $path = get_logfile($ts);
   $timestamp = '[' . util\timestamp() . '] ';
   $data = $timestamp . $message . PHP_EOL;
+  if (strlen($data) > $LOG_MESSAGE_MAX_LENGTH) {
+    error(400, array('error' => 'message(s) exceeds max length'));
+    exit();
+  }
   return file_put_contents($path, $data, FILE_APPEND);
 }
 
@@ -52,12 +57,17 @@ function log_debug($ts, $message, $prefix = 'DEBUG ') {
 }
 
 function log_messages($ts, $messages) {
+  global $LOG_MESSAGE_MAX_LENGTH;
   $path = get_logfile($ts);
   $timestamp = '[' . util\timestamp() . '] ';
   $data = array_map(function($message) use ($timestamp) {
     return $timestamp . trim(strval($message));
   }, $messages);
   $data = implode(PHP_EOL, $data) . PHP_EOL;
+  if (strlen($data) > $LOG_MESSAGE_MAX_LENGTH) {
+    error(400, array('error' => 'message(s) exceeds max length'));
+    exit();
+  }
   return file_put_contents($path, $data, FILE_APPEND);
 }
 

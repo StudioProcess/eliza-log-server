@@ -78,6 +78,7 @@ Returns:
 Errors:
 * 400 `{error: 'message(s) required'}`: no `message` or `messages` parameter was provided
 * 400 `{error: 'messages needs to be a JSON array of one or more strings'}`: `messages` parameter is in wrong format
+* 400 `{error: 'message(s) exceeds max length'}`: `message` or `messages` parameter too long
 * 401 `{error: 'session required'}`: no session token was provided
 * 403 `{error: 'invalid session'}`: session token is invalid 
 * 403 `{error: 'session expired'}`: session token is expired
