@@ -62,19 +62,22 @@ Errors:
 
 
 ### **GET /log**
-Add message to a logging session. The session token needs to be provided in one of the following ways:
+Add message to a logging session. One of the parameters `message` or `messages` is required. If both are given, `messages` is ignored.  
+The session token needs to be provided in one of the following ways:
 * Using an `Authorization: Bearer <session_token>` header
 * Using the `session` query parameter
 
 Query parameters:
-* `message`: (Required) The message to be added to the log.
+* `message`: (Optional) The message to be added to the log.
+* `messages`: (Optional) Array of messages to be added to the log. JSON encoded array of one or more strings e.g. `messages=["first msg","second msg"]` (use `JSON.stringify()` or similar).
 * `session`: (Optional) Session token, retrieved from [/session](#get-session). If this is omitted, an `Authorization` header containing the session token needs to be sent.
 
 Returns:
 * 200
 
 Errors:
-* 400 `{error: 'message required'}`: `message` parameter is missing
+* 400 `{error: 'message(s) required'}`: no `message` or `messages` parameter was provided
+* 400 `{error: 'messages needs to be a JSON array of one or more strings'}`: `messages` parameter is in wrong format
 * 401 `{error: 'session required'}`: no session token was provided
 * 403 `{error: 'invalid session'}`: session token is invalid 
 * 403 `{error: 'session expired'}`: session token is expired

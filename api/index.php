@@ -33,9 +33,10 @@ function get_logfile($ts) {
 }
 
 function log_message($ts, $message) {
+  $message = trim(strval($message));
   $path = get_logfile($ts);
   $timestamp = '[' . util\timestamp() . '] ';
-  $data = $timestamp . strval($message) . PHP_EOL;
+  $data = $timestamp . $message . PHP_EOL;
   return file_put_contents($path, $data, FILE_APPEND);
 }
 
@@ -53,10 +54,10 @@ function log_debug($ts, $message, $prefix = 'DEBUG ') {
 function log_messages($ts, $messages) {
   $path = get_logfile($ts);
   $timestamp = '[' . util\timestamp() . '] ';
-  $data = array_map(function($message) {
-    return $timestamp . strval($message) . PHP_EOL;
+  $data = array_map(function($message) use ($timestamp) {
+    return $timestamp . trim(strval($message));
   }, $messages);
-  $data = implode($data, PHP_EOL);
+  $data = implode(PHP_EOL, $data) . PHP_EOL;
   return file_put_contents($path, $data, FILE_APPEND);
 }
 
@@ -199,13 +200,21 @@ elseif ($route == 'log') {
     error(403, array('error' => 'invalid session'));
     exit();
   }
-  
-  if (! array_key_exists('message', $query) ) {
-    error(400, array('error' => 'message required'));
+  if ( array_key_exists('message', $query) ) {
+    log_debug( $token->ts, request_info() );
+    log_message( $token->ts, $query['message'] );
+  } else if ( array_key_exists('messages', $query) ) {
+    log_debug( $token->ts, request_info() );
+    $messages = json_decode($query['messages']);
+    if ( $messages == NULL || (!is_array($messages)) || empty($messages) ) {
+      error(400, array('error' => 'messages needs to be a JSON array of one or more strings'));
+      exit();
+    }
+    log_messages( $token->ts, $messages );
+  } else {
+    error(400, array('error' => 'message(s) required'));
     exit();
   }
-  log_debug( $token->ts, request_info() );
-  log_message( $token->ts, $query['message'] );
   ok();
   exit();
 }
