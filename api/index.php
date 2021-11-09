@@ -39,6 +39,27 @@ function log_message($ts, $message) {
   return file_put_contents($path, $data, FILE_APPEND);
 }
 
+function request_info() {
+  global $_SERVER;
+  return $_SERVER['REQUEST_METHOD'] . " " . $_SERVER['REQUEST_URI'];
+}
+
+function log_debug($ts, $message, $prefix = 'DEBUG ') {
+  global $DEBUG_LOG;
+  if ($DEBUG_LOG) return log_message($ts, $prefix . $message);
+  return NULL;
+}
+
+function log_messages($ts, $messages) {
+  $path = get_logfile($ts);
+  $timestamp = '[' . util\timestamp() . '] ';
+  $data = array_map(function($message) {
+    return $timestamp . strval($message) . PHP_EOL;
+  }, $messages);
+  $data = implode($data, PHP_EOL);
+  return file_put_contents($path, $data, FILE_APPEND);
+}
+
 # get auth token from request
 function get_auth_token() {
   # check Authorization Header
@@ -80,6 +101,21 @@ function check_host() {
   if ( !in_array(strtolower($_SERVER["HTTP_HOST"]), $ALLOW_HOSTS) ) {
     // error(403, array('error' => 'forbidden'));
     error(403);
+    exit();
+  }
+}
+
+function allow_method_cors($method='GET') {
+  global $_SERVER;
+  if ( $_SERVER['REQUEST_METHOD'] == 'OPTIONS' ) {
+    // Access-Control-Allow-Origin set by check_host()
+    header("Access-Control-Allow-Methods: " . $method . ", OPTIONS" );
+    header("Access-Control-Max-Age: 86400");
+    ok(204); // No content
+    exit();
+  }
+  if ( $method != $_SERVER['REQUEST_METHOD'] ) {
+    error(405); // method not allowed
     exit();
   }
 }
@@ -131,6 +167,7 @@ function info() {
 check_host();
 
 if ($route == 'session') {
+  allow_method_cors();
   $time = microtime(true);
   $payload = array(
     'ts' => $time, # timestamp
@@ -139,12 +176,14 @@ if ($route == 'session') {
   if ($EXPIRATION_SECS > 0) {
     $payload['exp'] = intval($time) + $EXPIRATION_SECS;
   }
+  log_debug( $time, request_info() );
   json(array(
     'session' => JWT::encode($payload, $jwt_secret),
   ));
   exit();
 }
 elseif ($route == 'log') {
+  allow_method_cors();
   $auth = get_auth_token();
   if ( is_null($auth) ) {
     error(401, array('error' => 'session required'));
@@ -165,11 +204,13 @@ elseif ($route == 'log') {
     error(400, array('error' => 'message required'));
     exit();
   }
+  log_debug( $token->ts, request_info() );
   log_message( $token->ts, $query['message'] );
   ok();
   exit();
 }
 elseif ($route == '') {
+  allow_method_cors();
   info();
   exit();
 }
@@ -179,5 +220,6 @@ else {
     exit();
   }
   error(404);
+  exit();
 }
 ?>

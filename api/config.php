@@ -1,6 +1,7 @@
 <?php
 
 $DEBUG = true;
+$DEBUG_LOG = false;
 $LOGDIR = '../logs_test'; # relative to this file
 $FILES = array(
   'jwt-secret'    => './jwt.secret',
