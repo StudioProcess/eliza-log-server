@@ -107,11 +107,12 @@ function check_host() {
     header("Access-Control-Allow-Origin: *");
   }
   
-  # check http(s) host
+  # check http(s) host including scheme
   if ( in_array('*', $ALLOW_HOSTS) ) return;
-  if ( !in_array(strtolower($_SERVER["HTTP_HOST"]), $ALLOW_HOSTS) ) {
+  $host_incl_scheme = $_SERVER["REQUEST_SCHEME"] . '://' . $_SERVER["HTTP_HOST"];
+  if ( ! in_array($host_incl_scheme, $ALLOW_HOSTS) ) {
     // error(403, array('error' => 'forbidden'));
-    error(403);
+    error(403); // Forbidden
     exit();
   }
 }
