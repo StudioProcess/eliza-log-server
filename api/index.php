@@ -139,21 +139,22 @@ function debug_status() {
   echo 'route: ' . $route . PHP_EOL;
   echo 'query: ';
   print_r($query);
-  session_start();
-  echo 'session id: ' . session_id() . PHP_EOL;
+  // session_start();
+  // echo 'session id: ' . session_id() . PHP_EOL;
   // if (empty($_SESSION)) {
   //   $_SESSION['id'] = session_id();
   // }
-  echo 'session data: ';
-  print_r($_SESSION);
-  echo 'current id: ' . util\id() . PHP_EOL;
+  // echo 'session data: ';
+  // print_r($_SESSION);
+  // echo 'current id: ' . util\id() . PHP_EOL;
+  echo 'current timestamp: ' . microtime(true) . PHP_EOL;
   echo 'auth: ' . get_auth_token() . PHP_EOL;
   echo '';
   echo 'headers: ';
   print_r(apache_request_headers());
-  // echo '';
-  // echo '$_SERVER: ';
-  // print_r($_SERVER);
+  echo '';
+  echo '$_SERVER: ';
+  print_r($_SERVER);
   echo '</pre>';
 }
 
