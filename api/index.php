@@ -11,7 +11,7 @@ if ($DEBUG) {
 }
 
 $dir = dirname($_SERVER['SCRIPT_NAME']);
-$route = util\remove_prefix( $_SERVER['REQUEST_URI'], $dir); # remove dir
+$route = basename( $_SERVER['REQUEST_URI']);
 $route = preg_replace('/\?.*/', '', $route); # remove query string
 $route = strtolower(trim($route, '/'));
 $query = $_REQUEST;
